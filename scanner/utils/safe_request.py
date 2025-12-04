@@ -17,14 +17,33 @@ class SafeRequestHandler:
 
     def __init__(self):
         self.timeout = aiohttp.ClientTimeout(total=30, connect=10)
+        self.stats = {
+            'total_requests': 0,
+            'successful_requests': 0,
+            'failed_requests': 0
+        }
+
+    def reset_stats(self):
+        """重置統計計數器"""
+        self.stats = {
+            'total_requests': 0,
+            'successful_requests': 0,
+            'failed_requests': 0
+        }
+
+    def get_stats(self) -> dict:
+        """獲取當前統計數據"""
+        return self.stats.copy()
 
     async def safe_get(self, session: aiohttp.ClientSession, url: str,
                        timeout: int = 30, **kwargs) -> Optional[aiohttp.ClientResponse]:
         """安全的 GET 請求"""
+        self.stats['total_requests'] += 1
         try:
             # 驗證 URL
             if not self._validate_url(url):
                 logger.warning(f"無效的 URL: {url}")
+                self.stats['failed_requests'] += 1
                 return None
 
             # 設定安全頭部
@@ -36,23 +55,29 @@ class SafeRequestHandler:
             custom_timeout = aiohttp.ClientTimeout(total=timeout)
 
             response = await session.get(url, timeout=custom_timeout, **kwargs)
+            self.stats['successful_requests'] += 1
             return response
 
         except asyncio.TimeoutError:
             logger.warning(f"請求超時: {url}")
+            self.stats['failed_requests'] += 1
         except aiohttp.ClientError as e:
             logger.warning(f"客戶端錯誤 {url}: {str(e)}")
+            self.stats['failed_requests'] += 1
         except Exception as e:
             logger.error(f"請求錯誤 {url}: {str(e)}")
+            self.stats['failed_requests'] += 1
 
         return None
 
     async def safe_post(self, session: aiohttp.ClientSession, url: str,
                         data: Any = None, timeout: int = 30, **kwargs) -> Optional[aiohttp.ClientResponse]:
         """安全的 POST 請求"""
+        self.stats['total_requests'] += 1
         try:
             if not self._validate_url(url):
                 logger.warning(f"無效的 URL: {url}")
+                self.stats['failed_requests'] += 1
                 return None
 
             headers = kwargs.get('headers', {})
@@ -62,23 +87,29 @@ class SafeRequestHandler:
             custom_timeout = aiohttp.ClientTimeout(total=timeout)
 
             async with session.post(url, data=data, timeout=custom_timeout, **kwargs) as response:
+                self.stats['successful_requests'] += 1
                 return response
 
         except asyncio.TimeoutError:
             logger.warning(f"POST 請求超時: {url}")
+            self.stats['failed_requests'] += 1
         except aiohttp.ClientError as e:
             logger.warning(f"POST 客戶端錯誤 {url}: {str(e)}")
+            self.stats['failed_requests'] += 1
         except Exception as e:
             logger.error(f"POST 請求錯誤 {url}: {str(e)}")
+            self.stats['failed_requests'] += 1
 
         return None
 
     async def safe_head(self, session: aiohttp.ClientSession, url: str,
                         timeout: int = 10, **kwargs) -> Optional[aiohttp.ClientResponse]:
         """安全的 HEAD 請求"""
+        self.stats['total_requests'] += 1
         try:
             if not self._validate_url(url):
                 logger.warning(f"無效的 URL: {url}")
+                self.stats['failed_requests'] += 1
                 return None
 
             headers = kwargs.get('headers', {})
@@ -88,14 +119,18 @@ class SafeRequestHandler:
             custom_timeout = aiohttp.ClientTimeout(total=timeout)
 
             response = await session.head(url, timeout=custom_timeout, **kwargs)
+            self.stats['successful_requests'] += 1
             return response
 
         except asyncio.TimeoutError:
             logger.warning(f"HEAD 請求超時: {url}")
+            self.stats['failed_requests'] += 1
         except aiohttp.ClientError as e:
             logger.warning(f"HEAD 客戶端錯誤 {url}: {str(e)}")
+            self.stats['failed_requests'] += 1
         except Exception as e:
             logger.error(f"HEAD 請求錯誤 {url}: {str(e)}")
+            self.stats['failed_requests'] += 1
 
         return None
 

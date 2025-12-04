@@ -152,6 +152,9 @@ class ScannerEngine:
 
         logger.info(f"開始掃描目標: {target.url} (ID: {scan_id})")
 
+        # 重置請求統計計數器
+        self.request_handler.reset_stats()
+
         try:
             # 初始化掃描結果
             scan_result = ScanResult(
@@ -225,6 +228,11 @@ class ScannerEngine:
 
             # 完成掃描
             end_time = time.time()
+            
+            # 更新請求統計
+            request_stats = self.request_handler.get_stats()
+            scan_result.statistics.update(request_stats)
+            
             scan_result.end_time = time.strftime(
                 '%Y-%m-%d %H:%M:%S',
                 time.localtime(end_time)
