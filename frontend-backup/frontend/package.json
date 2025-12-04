@@ -1,0 +1,12 @@
+{
+  "name": "websec-platform-frontend-simple",
+  "version": "1.0.0",
+  "description": "WebSecScan Platform Simple Frontend",
+  "scripts": {
+    "start": "serve -s public -l 3001",
+    "dev": "serve -s public -l 3001"
+  },
+  "dependencies": {
+    "serve": "^14.2.1"
+  }
+}

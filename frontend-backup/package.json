@@ -1,0 +1,56 @@
+{
+  "name": "websec-platform-frontend",
+  "version": "1.0.0",
+  "description": "WebSecScan Platform Frontend",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.19",
+    "@mui/material": "^5.14.20",
+    "@types/react": "^18.2.42",
+    "@types/react-dom": "^18.2.17",
+    "ajv": "^6.12.6",
+    "axios": "^1.6.2",
+    "moment": "^2.29.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.20.1",
+    "recharts": "^2.8.0",
+    "typescript": "^4.9.5"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "serve": "serve -s build -l 3000",
+    "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.4",
+    "ajv-keywords": "^3.5.2",
+    "react-scripts": "^4.0.3",
+    "serve": "^14.2.1",
+    "web-vitals": "^3.5.0"
+  },
+  "proxy": "http://localhost:8080"
+}

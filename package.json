@@ -1,0 +1,121 @@
+{
+  "name": "websec-platform",
+  "version": "1.0.0",
+  "description": "Professional Web Security Scanning Platform - 專業網站安全掃描平台",
+  "main": "index.js",
+  "scripts": {
+    "start-all": "bash scripts/start-all.sh",
+    "kill-ports": "bash scripts/kill-ports.sh",
+    "predev": "node scripts/check-ports.js",
+    "dev": "concurrently -n \"BACKEND,FRONTEND,SCANNER\" -c \"bgBlue.bold,bgGreen.bold,bgMagenta.bold\" \"npm run dev:backend\" \"npm run dev:frontend\" \"npm run dev:scanner\"",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm start",
+    "dev:scanner": "cd scanner && source venv/bin/activate && python main.py",
+
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && npm run build",
+
+    "start": "concurrently \"npm run start:backend\" \"npm run start:scanner\" \"npm run start:scheduler\"",
+    "start:backend": "cd backend && npm start",
+    "start:frontend": "cd frontend && npm run serve",
+    "start:scanner": "cd scanner && python main.py",
+    "start:scheduler": "cd backend && node src/scheduler/index.js",
+
+    "test": "npm run test:backend && npm run test:frontend && npm run test:scanner",
+    "test:backend": "cd backend && npm test",
+    "test:frontend": "cd frontend && npm test",
+    "test:scanner": "cd scanner && python -m pytest tests/",
+
+    "lint": "npm run lint:backend && npm run lint:frontend && npm run lint:scanner",
+    "lint:backend": "cd backend && eslint src/ --ext .js",
+    "lint:frontend": "cd frontend && eslint src/ --ext .js,.jsx,.ts,.tsx",
+    "lint:scanner": "cd scanner && flake8 . --exclude=venv,__pycache__",
+
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:restart": "docker-compose restart",
+    "docker:clean": "docker-compose down -v --rmi all",
+
+    "db:setup": "npm run db:postgres:setup && npm run db:mongo:setup",
+    "db:postgres:setup": "cd database && psql -h localhost -U websec_user -d websec_db -f schema.sql",
+    "db:mongo:setup": "cd database && mongo websec_scans mongo-init.js",
+    "db:migrate": "cd backend && npm run migrate",
+    "db:seed": "cd backend && npm run seed",
+
+    "setup": "npm run install:all && npm run db:setup && npm run build",
+    "setup:dev": "npm run install:all && npm run db:setup",
+    "install:all": "npm install && npm run install:backend && npm run install:frontend && npm run install:scanner",
+    "install:backend": "cd backend && npm install",
+    "install:frontend": "cd frontend && npm install",
+    "install:scanner": "cd scanner && pip install -r requirements.txt",
+
+    "clean": "npm run clean:backend && npm run clean:frontend && npm run clean:scanner",
+    "clean:backend": "cd backend && rm -rf node_modules dist",
+    "clean:frontend": "cd frontend && rm -rf node_modules build",
+    "clean:scanner": "cd scanner && rm -rf __pycache__ .pytest_cache",
+
+    "security:audit": "npm audit && npm run security:audit:backend && npm run security:audit:frontend",
+    "security:audit:backend": "cd backend && npm audit",
+    "security:audit:frontend": "cd frontend && npm audit",
+    "security:scan": "cd scanner && python security_scan.py --self-test",
+
+    "backup:db": "npm run backup:postgres && npm run backup:mongo",
+    "backup:postgres": "pg_dump -h localhost -U websec_user websec_db > backup/postgres_$(date +%Y%m%d_%H%M%S).sql",
+    "backup:mongo": "mongodump --host localhost:27017 --db websec_scans --out backup/mongo_$(date +%Y%m%d_%H%M%S)",
+
+    "logs": "concurrently \"npm run logs:backend\" \"npm run logs:scanner\"",
+    "logs:backend": "cd backend && tail -f logs/app.log",
+    "logs:scanner": "cd scanner && tail -f logs/scanner.log",
+
+    "health": "npm run health:backend && npm run health:scanner",
+    "health:backend": "curl -f http://localhost:8080/health || exit 1",
+    "health:scanner": "curl -f http://localhost:8081/health || exit 1",
+
+    "generate:docs": "npm run docs:api && npm run docs:frontend",
+    "docs:api": "cd backend && npx swagger-jsdoc -d swagger.config.js src/routes/*.js -o docs/api.json",
+    "docs:frontend": "cd frontend && npx typedoc src/ --out docs/",
+
+    "ssl:generate": "openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout ssl/key.pem -out ssl/cert.pem -subj '/CN=websec-platform.local'",
+
+    "monitor": "concurrently \"npm run monitor:system\" \"npm run monitor:logs\"",
+    "monitor:system": "top -p $(pgrep -f 'node.*websec')",
+    "monitor:logs": "multitail logs/app.log logs/scanner.log logs/nginx.log"
+  },
+  "keywords": [
+    "security",
+    "web-security",
+    "vulnerability-scanner",
+    "owasp",
+    "penetration-testing",
+    "security-audit",
+    "cybersecurity",
+    "ciso-tools"
+  ],
+  "author": "WebSecScan Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-org/websec-platform.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-org/websec-platform/issues"
+  },
+  "homepage": "https://websec-platform.com",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0",
+    "python": ">=3.9.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "eslint": "^8.57.0",
+    "nodemon": "^3.0.2",
+    "wait-on": "^7.2.0"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1"
+  }
+}

@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSecScan Enterprise - 企業級安全掃描平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        .nav-status {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .status-chip {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .status-online {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .status-offline {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .status-warning {
+            background: #fefce8;
+            color: #a16207;
+            border: 1px solid #fef08a;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            gap: 2rem;
+        }
+
+        .hero-section {
+            text-align: center;
+            color: white;
+            margin-bottom: 2rem;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-section p {
+            font-size: 1.25rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .scan-panel {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .panel-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .panel-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .scan-form {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: #374151;
+            font-size: 0.95rem;
+        }
+
+        .form-input {
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #3b82f6;
+        }
+
+        .checkbox-item label {
+            font-weight: normal;
+            margin: 0;
+        }
+
+        .scan-button {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .scan-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .scan-button:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            text-align: center;
+            font-weight: 500;
+            color: #6b7280;
+            margin-top: 0.5rem;
+        }
+
+        .results-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .vulnerability-card {
+            background: #f8fafc;
+            border-left: 4px solid #ef4444;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .vulnerability-card.medium {
+            border-left-color: #f59e0b;
+        }
+
+        .vulnerability-card.low {
+            border-left-color: #10b981;
+        }
+
+        .severity-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .severity-high {
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        .severity-medium {
+            background: #fefce8;
+            color: #92400e;
+        }
+
+        .severity-low {
+            background: #f0fdf4;
+            color: #166534;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        .success-message {
+            text-align: center;
+            padding: 2rem;
+            color: #10b981;
+        }
+
+        .success-message i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+
+            .main-container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-shield-alt"></i>
+                WebSecScan Enterprise
+            </div>
+            <div class="nav-status">
+                <div class="status-chip status-warning" id="backend-status-nav">
+                    <i class="fas fa-circle"></i>
+                    後端檢查中
+                </div>
+                <div class="status-chip status-warning" id="scanner-status-nav">
+                    <i class="fas fa-circle"></i>
+                    掃描引擎待機
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="hero-section">
+            <h1><i class="fas fa-shield-alt"></i> 企業級安全掃描平台</h1>
+            <p>專業OWASP Top 10漏洞檢測 • 適合資安長及安全團隊使用</p>
+        </div>
+
+        <!-- 掃描配置面板 -->
+        <div class="scan-panel">
+            <div class="panel-header">
+                <div class="panel-icon">
+                    <i class="fas fa-crosshairs"></i>
+                </div>
+                <h2>新建安全掃描</h2>
+            </div>
+
+            <form class="scan-form" id="scanForm">
+                <div class="form-group">
+                    <label for="targetUrl">
+                        <i class="fas fa-globe"></i> 掃描目標 URL
+                    </label>
+                    <input type="url" id="targetUrl" class="form-input"
+                           placeholder="https://example.com"
+                           value="http://192.168.250.35:8081/"
+                           required>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="scanType">掃描類型</label>
+                        <select id="scanType" class="form-input">
+                            <option value="basic">基本掃描</option>
+                            <option value="comprehensive" selected>全面掃描</option>
+                            <option value="custom">自定義掃描</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="maxConcurrency">併發數量</label>
+                        <select id="maxConcurrency" class="form-input">
+                            <option value="1">低 (1個)</option>
+                            <option value="2" selected>中 (2個)</option>
+                            <option value="3">高 (3個)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-cogs"></i> 掃描模組 (OWASP Top 10)
+                    </label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="sql_injection" checked>
+                            <label for="sql_injection">SQL 注入</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="xss_scanner" checked>
+                            <label for="xss_scanner">跨站腳本攻擊 (XSS)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="csrf_scanner" checked>
+                            <label for="csrf_scanner">跨站請求偽造 (CSRF)</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="auth_bypass_scanner" checked>
+                            <label for="auth_bypass_scanner">身份驗證繞過</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="directory_traversal_scanner" checked>
+                            <label for="directory_traversal_scanner">目錄遍歷</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="info_disclosure" checked>
+                            <label for="info_disclosure">信息洩露</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="ssl_tls" checked>
+                            <label for="ssl_tls">SSL/TLS 安全</label>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="scan-button" id="scanButton">
+                    <i class="fas fa-play"></i>
+                    開始安全掃描
+                </button>
+            </form>
+        </div>
+
+        <!-- 掃描進度面板 -->
+        <div class="progress-section" id="progressSection">
+            <div class="panel-header">
+                <div class="panel-icon">
+                    <i class="fas fa-tasks"></i>
+                </div>
+                <h2>掃描進度</h2>
+            </div>
+
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">準備中...</div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="scannedRequests">0</div>
+                    <div class="stat-label">已掃描請求</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="foundVulns">0</div>
+                    <div class="stat-label">發現漏洞</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="scanDuration">00:00</div>
+                    <div class="stat-label">掃描時間</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="riskScore">0.0</div>
+                    <div class="stat-label">風險評分</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 掃描結果面板 -->
+        <div class="results-section" id="resultsSection">
+            <div class="panel-header">
+                <div class="panel-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h2>掃描結果</h2>
+            </div>
+
+            <div id="scanResults">
+                <!-- 結果將在這裡動態生成 -->
+            </div>
+
+            <div class="export-buttons">
+                <button class="btn btn-secondary" onclick="exportResults('json')">
+                    <i class="fas fa-download"></i> 匯出 JSON
+                </button>
+                <button class="btn btn-secondary" onclick="exportResults('pdf')">
+                    <i class="fas fa-file-pdf"></i> 匯出 PDF 報告
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局變量
+        let currentScanId = null;
+        let scanInterval = null;
+        let scanStartTime = null;
+
+        // 安全的DOM元素創建函數
+        function createElement(tag, className, textContent) {
+            const element = document.createElement(tag);
+            if (className) element.className = className;
+            if (textContent) element.textContent = textContent;
+            return element;
+        }
+
+        function createIconElement(iconClass) {
+            const icon = document.createElement('i');
+            icon.className = iconClass;
+            return icon;
+        }
+
+        // 系統狀態檢查
+        async function checkSystemStatus() {
+            const backendStatus = document.getElementById('backend-status-nav');
+            const scannerStatus = document.getElementById('scanner-status-nav');
+            const backendIcon = createIconElement('fas fa-circle');
+            const scannerIcon = createIconElement('fas fa-circle');
+
+            try {
+                const response = await fetch('http://10.64.11.49:8085/health');
+                if (response.ok) {
+                    const data = await response.json();
+                    
+                    // 更新後端狀態
+                    backendStatus.textContent = ' 後端運行中';
+                    backendStatus.prepend(backendIcon);
+                    backendStatus.className = 'status-chip status-online';
+                    
+                    // 更新掃描引擎狀態 (當後端正常時,掃描引擎也視為就緒)
+                    scannerStatus.textContent = ' 掃描引擎就緒';
+                    scannerStatus.prepend(scannerIcon);
+                    scannerStatus.className = 'status-chip status-online';
+                } else {
+                    backendStatus.textContent = ' 後端錯誤';
+                    backendStatus.prepend(backendIcon);
+                    backendStatus.className = 'status-chip status-offline';
+                    
+                    scannerStatus.textContent = ' 掃描引擎離線';
+                    scannerStatus.prepend(scannerIcon);
+                    scannerStatus.className = 'status-chip status-offline';
+                }
+            } catch (error) {
+                backendStatus.textContent = ' 後端離線';
+                backendStatus.prepend(backendIcon);
+                backendStatus.className = 'status-chip status-offline';
+                
+                scannerStatus.textContent = ' 掃描引擎離線';
+                scannerStatus.prepend(scannerIcon);
+                scannerStatus.className = 'status-chip status-offline';
+            }
+        }
+
+        // 表單提交處理
+        document.getElementById('scanForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await startScan();
+        });
+
+        // 開始掃描 - 使用真實的後端API
+        async function startScan() {
+            const targetUrl = document.getElementById('targetUrl').value;
+            const scanType = document.getElementById('scanType').value;
+            const maxConcurrency = parseInt(document.getElementById('maxConcurrency').value);
+
+            // 獲取選中的掃描模組
+            const modules = [];
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+            checkboxes.forEach(checkbox => {
+                modules.push(checkbox.id);
+            });
+
+            const scanConfig = {
+                url: targetUrl,
+                scan_type: scanType,
+                modules: modules,
+                max_concurrency: maxConcurrency,
+                timeout: 30
+            };
+
+            console.log('開始掃描:', scanConfig);
+
+            // 顯示進度面板
+            document.getElementById('progressSection').style.display = 'block';
+            document.getElementById('resultsSection').style.display = 'none';
+
+            const scanButton = document.getElementById('scanButton');
+            scanButton.disabled = true;
+            scanButton.textContent = ' 掃描中...';
+            const spinnerIcon = createIconElement('fas fa-spinner fa-spin');
+            scanButton.prepend(spinnerIcon);
+
+            try {
+                // 發送掃描請求到後端
+                const response = await fetch('http://10.64.11.49:8085/api/v1/scan', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(scanConfig)
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    currentScanId = result.scan_id;
+                    scanStartTime = Date.now();
+
+                    console.log('掃描已啟動:', result);
+
+                    // 開始輪詢掃描狀態
+                    startProgressPolling();
+                } else {
+                    const error = await response.json();
+                    throw new Error(error.message || '掃描啟動失敗');
+                }
+            } catch (error) {
+                console.error('掃描錯誤:', error);
+                alert('掃描啟動失敗: ' + error.message);
+                resetScanUI();
+            }
+        }
+
+        // 開始進度輪詢
+        function startProgressPolling() {
+            updateScanTimer();
+
+            scanInterval = setInterval(async () => {
+                await checkScanProgress();
+                updateScanTimer();
+            }, 2000);
+        }
+
+        // 檢查掃描進度
+        async function checkScanProgress() {
+            if (!currentScanId) return;
+
+            try {
+                const response = await fetch(`http://10.64.11.49:8085/api/v1/scan/${currentScanId}/status`);
+                if (response.ok) {
+                    const status = await response.json();
+                    updateProgressUI(status);
+
+                    if (status.status === 'completed' || status.status === 'failed') {
+                        clearInterval(scanInterval);
+                        if (status.status === 'completed') {
+                            await loadScanResults();
+                        } else {
+                            alert('掃描失敗: ' + status.message);
+                            resetScanUI();
+                        }
+                    }
+                } else {
+                    console.error('無法獲取掃描狀態');
+                }
+            } catch (error) {
+                console.error('進度檢查錯誤:', error);
+            }
+        }
+
+        // 更新進度UI
+        function updateProgressUI(status) {
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            const scannedRequests = document.getElementById('scannedRequests');
+            const foundVulns = document.getElementById('foundVulns');
+            const riskScore = document.getElementById('riskScore');
+
+            progressFill.style.width = status.progress + '%';
+            progressText.textContent = status.message || `掃描進度: ${status.progress}%`;
+
+            if (status.statistics) {
+                scannedRequests.textContent = status.statistics.total_requests || 0;
+                foundVulns.textContent = status.statistics.vulnerabilities_found || 0;
+            }
+
+            if (status.risk_score !== undefined) {
+                riskScore.textContent = status.risk_score.toFixed(1);
+            }
+        }
+
+        // 更新掃描計時器
+        function updateScanTimer() {
+            if (scanStartTime) {
+                const elapsed = Math.floor((Date.now() - scanStartTime) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                document.getElementById('scanDuration').textContent =
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+        }
+
+        // 載入掃描結果
+        async function loadScanResults() {
+            try {
+                const response = await fetch(`http://10.64.11.49:8085/api/v1/scan/${currentScanId}/results`);
+                if (response.ok) {
+                    const results = await response.json();
+                    displayResults(results);
+                    document.getElementById('resultsSection').style.display = 'block';
+                } else {
+                    const error = await response.json();
+                    throw new Error(error.message || '無法載入掃描結果');
+                }
+            } catch (error) {
+                console.error('結果載入錯誤:', error);
+                alert('載入掃描結果失敗: ' + error.message);
+            }
+
+            resetScanUI();
+        }
+
+        // 安全地顯示掃描結果
+        function displayResults(results) {
+            const resultsContainer = document.getElementById('scanResults');
+            // 清空容器
+            while (resultsContainer.firstChild) {
+                resultsContainer.removeChild(resultsContainer.firstChild);
+            }
+
+            if (results.vulnerabilities && results.vulnerabilities.length > 0) {
+                const title = createElement('h3', '', `發現的安全漏洞 (${results.vulnerabilities.length})`);
+                resultsContainer.appendChild(title);
+
+                results.vulnerabilities.forEach((vuln, index) => {
+                    const card = createElement('div', `vulnerability-card ${vuln.severity.toLowerCase()}`);
+
+                    const header = createElement('div');
+                    header.style.display = 'flex';
+                    header.style.justifyContent = 'space-between';
+                    header.style.alignItems = 'center';
+                    header.style.marginBottom = '0.5rem';
+
+                    const vulnTitle = createElement('h4', '', vuln.title);
+                    const badges = createElement('div');
+                    badges.style.display = 'flex';
+                    badges.style.gap = '0.5rem';
+                    
+                    const severityBadge = createElement('span', `severity-badge severity-${vuln.severity.toLowerCase()}`, vuln.severity.toUpperCase());
+                    badges.appendChild(severityBadge);
+                    
+                    // 顯示風險評分
+                    if (vuln.risk_score !== undefined) {
+                        const riskBadge = createElement('span', 'severity-badge', `風險: ${vuln.risk_score}`);
+                        riskBadge.style.background = '#6c757d';
+                        badges.appendChild(riskBadge);
+                    }
+                    
+                    // 顯示信心度
+                    if (vuln.confidence) {
+                        const confBadge = createElement('span', 'severity-badge', vuln.confidence);
+                        confBadge.style.background = '#17a2b8';
+                        badges.appendChild(confBadge);
+                    }
+
+                    header.appendChild(vulnTitle);
+                    header.appendChild(badges);
+
+                    // 基本資訊區
+                    const basicInfo = createElement('div');
+                    basicInfo.style.marginBottom = '0.75rem';
+                    
+                    const urlInfo = createElement('p');
+                    urlInfo.style.marginBottom = '0.3rem';
+                    const urlLabel = createElement('strong', '', '📍 位置: ');
+                    urlInfo.appendChild(urlLabel);
+                    const urlLink = createElement('a');
+                    urlLink.href = vuln.affected_url || vuln.url;
+                    urlLink.textContent = vuln.affected_url || vuln.url;
+                    urlLink.target = '_blank';
+                    urlLink.style.color = '#007bff';
+                    urlLink.style.textDecoration = 'none';
+                    urlInfo.appendChild(urlLink);
+                    basicInfo.appendChild(urlInfo);
+                    
+                    // CWE 和 OWASP 分類
+                    if (vuln.cwe_id || vuln.owasp_category) {
+                        const classInfo = createElement('p');
+                        classInfo.style.marginBottom = '0.3rem';
+                        classInfo.style.fontSize = '0.9em';
+                        classInfo.style.color = '#666';
+                        if (vuln.cwe_id) {
+                            const cweLabel = createElement('strong', '', '🔖 ');
+                            classInfo.appendChild(cweLabel);
+                            classInfo.appendChild(document.createTextNode(vuln.cwe_id + '  '));
+                        }
+                        if (vuln.owasp_category) {
+                            const owaspLabel = createElement('strong', '', '🛡️ ');
+                            classInfo.appendChild(owaspLabel);
+                            classInfo.appendChild(document.createTextNode(vuln.owasp_category));
+                        }
+                        basicInfo.appendChild(classInfo);
+                    }
+
+                    const description = createElement('p');
+                    description.style.marginTop = '0.5rem';
+                    const descLabel = createElement('strong', '', '📝 描述: ');
+                    description.appendChild(descLabel);
+                    description.appendChild(document.createTextNode(vuln.description));
+                    basicInfo.appendChild(description);
+
+                    card.appendChild(header);
+                    card.appendChild(basicInfo);
+
+                    // 可折疊的詳細資訊區
+                    const detailsToggle = createElement('div');
+                    detailsToggle.style.cursor = 'pointer';
+                    detailsToggle.style.padding = '0.5rem';
+                    detailsToggle.style.background = 'rgba(0,0,0,0.03)';
+                    detailsToggle.style.borderRadius = '4px';
+                    detailsToggle.style.marginTop = '0.5rem';
+                    detailsToggle.style.userSelect = 'none';
+                    detailsToggle.innerHTML = '<strong>▼ 查看詳細資訊</strong>';
+                    
+                    const detailsContent = createElement('div');
+                    detailsContent.style.display = 'none';
+                    detailsContent.style.marginTop = '0.75rem';
+                    detailsContent.style.paddingTop = '0.75rem';
+                    detailsContent.style.borderTop = '1px solid #ddd';
+                    
+                    // 建議修復
+                    if (vuln.remediation) {
+                        const recommendation = createElement('div');
+                        recommendation.style.marginBottom = '0.75rem';
+                        const recLabel = createElement('strong', '', '💡 修復建議: ');
+                        recommendation.appendChild(recLabel);
+                        const recText = createElement('pre');
+                        recText.style.whiteSpace = 'pre-wrap';
+                        recText.style.background = '#f8f9fa';
+                        recText.style.padding = '0.75rem';
+                        recText.style.borderRadius = '4px';
+                        recText.style.fontSize = '0.9em';
+                        recText.style.marginTop = '0.3rem';
+                        recText.textContent = vuln.remediation;
+                        recommendation.appendChild(recText);
+                        detailsContent.appendChild(recommendation);
+                    }
+                    
+                    // 請求詳情
+                    if (vuln.request_method || vuln.request_payload) {
+                        const requestInfo = createElement('div');
+                        requestInfo.style.marginBottom = '0.75rem';
+                        const reqLabel = createElement('strong', '', '📤 請求詳情: ');
+                        requestInfo.appendChild(reqLabel);
+                        const reqDetails = createElement('div');
+                        reqDetails.style.marginTop = '0.3rem';
+                        reqDetails.style.fontSize = '0.9em';
+                        if (vuln.request_method) {
+                            const method = createElement('div');
+                            method.innerHTML = `<strong>方法:</strong> ${vuln.request_method}`;
+                            reqDetails.appendChild(method);
+                        }
+                        if (vuln.request_payload) {
+                            const payload = createElement('div');
+                            payload.innerHTML = `<strong>Payload:</strong> <code>${vuln.request_payload}</code>`;
+                            reqDetails.appendChild(payload);
+                        }
+                        requestInfo.appendChild(reqDetails);
+                        detailsContent.appendChild(requestInfo);
+                    }
+                    
+                    // 響應證據
+                    if (vuln.response_evidence) {
+                        const evidence = createElement('div');
+                        evidence.style.marginBottom = '0.75rem';
+                        const evidLabel = createElement('strong', '', '🔍 響應證據: ');
+                        evidence.appendChild(evidLabel);
+                        const evidText = createElement('pre');
+                        evidText.style.whiteSpace = 'pre-wrap';
+                        evidText.style.background = '#fff3cd';
+                        evidText.style.padding = '0.75rem';
+                        evidText.style.borderRadius = '4px';
+                        evidText.style.fontSize = '0.85em';
+                        evidText.style.marginTop = '0.3rem';
+                        evidText.style.maxHeight = '150px';
+                        evidText.style.overflow = 'auto';
+                        evidText.textContent = vuln.response_evidence.substring(0, 500) + (vuln.response_evidence.length > 500 ? '...' : '');
+                        evidence.appendChild(evidText);
+                        detailsContent.appendChild(evidence);
+                    }
+                    
+                    // 時間戳
+                    if (vuln.timestamp) {
+                        const timestamp = createElement('p');
+                        timestamp.style.fontSize = '0.85em';
+                        timestamp.style.color = '#888';
+                        timestamp.style.marginTop = '0.5rem';
+                        timestamp.innerHTML = `<strong>⏱️ 發現時間:</strong> ${vuln.timestamp}`;
+                        detailsContent.appendChild(timestamp);
+                    }
+                    
+                    // 折疊切換功能
+                    detailsToggle.onclick = () => {
+                        if (detailsContent.style.display === 'none') {
+                            detailsContent.style.display = 'block';
+                            detailsToggle.innerHTML = '<strong>▲ 收起詳細資訊</strong>';
+                        } else {
+                            detailsContent.style.display = 'none';
+                            detailsToggle.innerHTML = '<strong>▼ 查看詳細資訊</strong>';
+                        }
+                    };
+                    
+                    card.appendChild(detailsToggle);
+                    card.appendChild(detailsContent);
+                    resultsContainer.appendChild(card);
+                });
+            } else {
+                const successDiv = createElement('div', 'success-message');
+
+                const icon = createIconElement('fas fa-check-circle');
+                const title = createElement('h3', '', '掃描完成 - 未發現安全漏洞');
+                const text = createElement('p', '', '恭喜！目標網站通過了所有安全檢查。');
+
+                successDiv.appendChild(icon);
+                successDiv.appendChild(title);
+                successDiv.appendChild(text);
+                resultsContainer.appendChild(successDiv);
+            }
+        }
+
+        // 匯出結果
+        async function exportResults(format) {
+            if (!currentScanId) return;
+
+            try {
+                const response = await fetch(`http://10.64.11.49:8085/api/v1/scan/${currentScanId}/export/${format}`);
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `scan_report_${currentScanId}.${format}`;
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+
+                    console.log('匯出成功:', format);
+                } else {
+                    const error = await response.json();
+                    throw new Error(error.message || '匯出失敗');
+                }
+            } catch (error) {
+                console.error('匯出錯誤:', error);
+                alert('匯出失敗: ' + error.message);
+            }
+        }
+
+        // 重置掃描UI
+        function resetScanUI() {
+            const scanButton = document.getElementById('scanButton');
+            scanButton.disabled = false;
+            scanButton.textContent = ' 開始安全掃描';
+            const playIcon = createIconElement('fas fa-play');
+            scanButton.prepend(playIcon);
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            checkSystemStatus();
+            setInterval(checkSystemStatus, 30000); // 每30秒檢查一次系統狀態
+        });
+    </script>
+</body>
+</html>

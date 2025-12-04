@@ -1,0 +1,80 @@
+# ====================================================================
+# WebSecScan Python 掃描引擎依賴包
+# ====================================================================
+
+# 核心 Web 框架
+aiohttp>=3.8.0,<4.0.0
+multidict>=6.0.0
+yarl>=1.8.0
+async-timeout>=4.0.0
+
+# HTTP 客戶端和網路工具
+requests>=2.28.0
+urllib3>=1.26.0
+httpx>=0.23.0
+
+# SSL/TLS 相關
+cryptography>=3.4.0
+pyOpenSSL>=22.0.0
+certifi>=2022.12.0
+
+# 資料庫連接
+asyncpg>=0.27.0              # PostgreSQL async driver
+pymongo>=4.0.0               # MongoDB driver
+redis>=4.0.0                 # Redis client
+
+# 數據處理和分析
+pandas>=1.5.0
+numpy>=1.21.0
+lxml>=4.6.0                  # HTML/XML 解析
+beautifulsoup4>=4.11.0       # HTML 解析
+html5lib>=1.1
+
+# 安全相關
+bcrypt>=4.0.0
+passlib>=1.7.4
+
+# 正則表達式和文本處理
+chardet>=5.0.0
+
+# 日誌和監控
+loguru>=0.6.0
+
+# 配置管理
+python-decouple>=3.6
+PyYAML>=6.0
+
+# HTTP 代理支援
+PySocks>=1.7.0
+
+# 測試框架
+pytest>=7.0.0
+pytest-asyncio>=0.20.0
+
+# 程式碼品質
+flake8>=5.0.0
+
+# 性能和記憶體分析
+psutil>=5.8.0
+
+# 時間處理
+python-dateutil>=2.8.0
+
+# JSON 和序列化
+pydantic>=1.10.0
+
+# DNS 解析
+dnspython>=2.2.0
+
+# 模板引擎
+jinja2>=3.0.0
+
+# 資料驗證
+jsonschema>=4.0.0
+
+# 併發和異步工具
+aiofiles>=0.8.0
+
+# 基礎工具
+click>=8.0.0
+colorama>=0.4.0

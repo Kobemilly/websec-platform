@@ -1,0 +1,273 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2025-12-04T10:00:00Z",
+  "description": "SQL Injection 漏洞檢測規則庫",
+  "author": "WebSecScan Security Team",
+  "payloads": [
+    {
+      "id": "sqli-001",
+      "payload": "'",
+      "description": "單引號錯誤測試",
+      "detection_method": "error",
+      "expected_response": "",
+      "sleep_time": 0,
+      "severity": "high",
+      "category": "error-based",
+      "cve_refs": [],
+      "enabled": true
+    },
+    {
+      "id": "sqli-002",
+      "payload": "\"",
+      "description": "雙引號錯誤測試",
+      "detection_method": "error",
+      "expected_response": "",
+      "sleep_time": 0,
+      "severity": "high",
+      "category": "error-based",
+      "cve_refs": [],
+      "enabled": true
+    },
+    {
+      "id": "sqli-003",
+      "payload": "' OR '1'='1",
+      "description": "經典 OR 注入",
+      "detection_method": "boolean",
+      "expected_response": "",
+      "sleep_time": 0,
+      "severity": "critical",
+      "category": "boolean-based",
+      "cve_refs": [],
+      "enabled": true
+    },
+    {
+      "id": "sqli-004",
+      "payload": "' AND '1'='1",
+      "description": "AND 條件注入",
+      "detection_method": "boolean",
+      "expected_response": "",
+      "sleep_time": 0,
+      "severity": "high",
+      "category": "boolean-based",
+      "cve_refs": [],
+      "enabled": true
+    },
+    {
+      "id": "sqli-005",
+      "payload": "1' UNION SELECT null--",
+      "description": "UNION 查詢注入",
+      "detection_method": "error",
+      "expected_response": "",
+      "sleep_time": 0,
+      "severity": "critical",
+      "category": "union-based",
+      "cve_refs": [],
+      "enabled": true
+    },
+    {
+      "id": "sqli-006",
+      "payload": "'; DROP TABLE users--",
+      "description": "破壞性注入測試",
+      "detection_method": "error",
+      "expected_response": "",
+      "sleep_time": 0,
+      "severity": "critical",
+      "category": "destructive",
+      "cve_refs": [],
+      "enabled": false,
+      "note": "危險操作,預設停用"
+    },
+    {
+      "id": "sqli-007",
+      "payload": "1' AND 1=1--",
+      "description": "布林盲注 - 真條件",
+      "detection_method": "boolean",
+      "expected_response": "",
+      "sleep_time": 0,
+      "severity": "high",
+      "category": "blind-boolean",
+      "cve_refs": [],
+      "enabled": true
+    },
+    {
+      "id": "sqli-008",
+      "payload": "1' AND 1=2--",
+      "description": "布林盲注 - 假條件",
+      "detection_method": "boolean",
+      "expected_response": "",
+      "sleep_time": 0,
+      "severity": "high",
+      "category": "blind-boolean",
+      "cve_refs": [],
+      "enabled": true
+    },
+    {
+      "id": "sqli-009",
+      "payload": "1'; WAITFOR DELAY '00:00:05'--",
+      "description": "SQL Server 時間延遲注入",
+      "detection_method": "time",
+      "expected_response": "",
+      "sleep_time": 5.0,
+      "severity": "high",
+      "category": "time-based",
+      "database": "SQL Server",
+      "cve_refs": [],
+      "enabled": true
+    },
+    {
+      "id": "sqli-010",
+      "payload": "1' AND SLEEP(5)--",
+      "description": "MySQL 時間延遲注入",
+      "detection_method": "time",
+      "expected_response": "",
+      "sleep_time": 5.0,
+      "severity": "high",
+      "category": "time-based",
+      "database": "MySQL",
+      "cve_refs": [],
+      "enabled": true
+    },
+    {
+      "id": "sqli-011",
+      "payload": "1'; SELECT pg_sleep(5)--",
+      "description": "PostgreSQL 時間延遲注入",
+      "detection_method": "time",
+      "expected_response": "",
+      "sleep_time": 5.0,
+      "severity": "high",
+      "category": "time-based",
+      "database": "PostgreSQL",
+      "cve_refs": [],
+      "enabled": true
+    },
+    {
+      "id": "sqli-012",
+      "payload": "'||'1'=='1",
+      "description": "NoSQL 注入測試",
+      "detection_method": "boolean",
+      "expected_response": "",
+      "sleep_time": 0,
+      "severity": "high",
+      "category": "nosql",
+      "database": "MongoDB",
+      "cve_refs": [],
+      "enabled": true
+    },
+    {
+      "id": "sqli-013",
+      "payload": "admin'--",
+      "description": "二階注入測試",
+      "detection_method": "error",
+      "expected_response": "",
+      "sleep_time": 0,
+      "severity": "medium",
+      "category": "second-order",
+      "cve_refs": [],
+      "enabled": true
+    }
+  ],
+  "error_patterns": [
+    {
+      "id": "err-001",
+      "pattern": "You have an error in your SQL syntax",
+      "database": "MySQL",
+      "confidence": "high"
+    },
+    {
+      "id": "err-002",
+      "pattern": "mysql_fetch_array\\(\\)",
+      "database": "MySQL",
+      "confidence": "high"
+    },
+    {
+      "id": "err-003",
+      "pattern": "MySQL server version",
+      "database": "MySQL",
+      "confidence": "high"
+    },
+    {
+      "id": "err-004",
+      "pattern": "PostgreSQL.*ERROR",
+      "database": "PostgreSQL",
+      "confidence": "high"
+    },
+    {
+      "id": "err-005",
+      "pattern": "Warning.*\\Wpg_",
+      "database": "PostgreSQL",
+      "confidence": "high"
+    },
+    {
+      "id": "err-006",
+      "pattern": "PostgreSQL query failed",
+      "database": "PostgreSQL",
+      "confidence": "high"
+    },
+    {
+      "id": "err-007",
+      "pattern": "Microsoft OLE DB Provider for ODBC Drivers",
+      "database": "SQL Server",
+      "confidence": "high"
+    },
+    {
+      "id": "err-008",
+      "pattern": "\\[SQL Server\\]",
+      "database": "SQL Server",
+      "confidence": "high"
+    },
+    {
+      "id": "err-009",
+      "pattern": "Unclosed quotation mark after the character string",
+      "database": "SQL Server",
+      "confidence": "high"
+    },
+    {
+      "id": "err-010",
+      "pattern": "ORA-[0-9][0-9][0-9][0-9]",
+      "database": "Oracle",
+      "confidence": "high"
+    },
+    {
+      "id": "err-011",
+      "pattern": "Oracle error",
+      "database": "Oracle",
+      "confidence": "high"
+    },
+    {
+      "id": "err-012",
+      "pattern": "Oracle.*Driver",
+      "database": "Oracle",
+      "confidence": "high"
+    },
+    {
+      "id": "err-013",
+      "pattern": "SQLite/JDBCDriver",
+      "database": "SQLite",
+      "confidence": "high"
+    },
+    {
+      "id": "err-014",
+      "pattern": "SQLite.Exception",
+      "database": "SQLite",
+      "confidence": "high"
+    },
+    {
+      "id": "err-015",
+      "pattern": "SQL syntax.*MySQL",
+      "database": "Generic",
+      "confidence": "medium"
+    },
+    {
+      "id": "err-016",
+      "pattern": "Warning.*mysql_.*",
+      "database": "Generic",
+      "confidence": "medium"
+    },
+    {
+      "id": "err-017",
+      "pattern": "MySQLSyntaxErrorException",
+      "database": "Generic",
+      "confidence": "high"
+    }
+  ]
+}

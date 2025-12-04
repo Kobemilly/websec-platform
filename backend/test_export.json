@@ -1,0 +1,38 @@
+{
+  "scan_id": "scan_1764231915136_f395c91d",
+  "target_url": "http://192.168.250.35:8081/",
+  "scan_type": "comprehensive",
+  "scan_time": "2025-11-27T08:25:15.136Z",
+  "duration": 10510,
+  "vulnerabilities": [
+    {
+      "id": "vuln_001",
+      "title": "SSL/TLS 配置問題",
+      "severity": "medium",
+      "url": "http://192.168.250.35:8081/",
+      "description": "目標使用HTTP協議，缺乏加密保護",
+      "recommendation": "建議啟用HTTPS並配置有效的SSL證書",
+      "cwe": "CWE-319",
+      "owasp": "A02:2021-Cryptographic Failures"
+    },
+    {
+      "id": "vuln_002",
+      "title": "信息洩露",
+      "severity": "low",
+      "url": "http://192.168.250.35:8081//info",
+      "description": "服務器返回了敏感的系統信息",
+      "recommendation": "隱藏服務器版本信息和系統詳情",
+      "cwe": "CWE-200",
+      "owasp": "A01:2021-Broken Access Control"
+    }
+  ],
+  "statistics": {
+    "total_requests": 19,
+    "successful_requests": 18,
+    "failed_requests": 1,
+    "vulnerabilities_found": 2
+  },
+  "risk_score": 6.5,
+  "generated_at": "2025-11-27T08:28:55.946Z",
+  "generated_by": "WebSecScan Enterprise v1.0.0"
+}

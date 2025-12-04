@@ -1,0 +1,64 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2025-12-04T10:00:00Z",
+  "description": "CSRF (Cross-Site Request Forgery) 漏洞檢測規則庫",
+  "author": "WebSecScan Security Team",
+  "csrf_token_names": [
+    "csrf_token",
+    "csrftoken",
+    "csrf",
+    "_token",
+    "authenticity_token",
+    "token",
+    "security_token",
+    "anti_csrf_token",
+    "form_token",
+    "session_token",
+    "_csrf"
+  ],
+  "sensitive_actions": [
+    "login",
+    "register",
+    "delete",
+    "update",
+    "edit",
+    "admin",
+    "profile",
+    "settings",
+    "password",
+    "payment",
+    "transfer",
+    "order",
+    "checkout"
+  ],
+  "detection_rules": [
+    {
+      "id": "csrf-001",
+      "name": "Missing CSRF Token",
+      "description": "表單缺少 CSRF 令牌",
+      "severity": "high",
+      "enabled": true
+    },
+    {
+      "id": "csrf-002",
+      "name": "Predictable CSRF Token",
+      "description": "CSRF 令牌可預測",
+      "severity": "critical",
+      "enabled": true
+    },
+    {
+      "id": "csrf-003",
+      "name": "Token Not Validated",
+      "description": "伺服器未驗證 CSRF 令牌",
+      "severity": "critical",
+      "enabled": true
+    },
+    {
+      "id": "csrf-004",
+      "name": "Same Token Reuse",
+      "description": "相同令牌被重複使用",
+      "severity": "medium",
+      "enabled": true
+    }
+  ]
+}
